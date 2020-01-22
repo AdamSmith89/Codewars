@@ -2,16 +2,28 @@ fn main() {
     println!("Run the tests!");
 }
 
-fn comp(a: Vec<i64>, b: Vec<i64>) -> bool {    
-    if a.is_empty() || b.is_empty() || a.len() != b.len() {
+#[allow(dead_code)]
+fn comp(a: Vec<i64>, b: Vec<i64>) -> bool {
+    if a.len() != b.len() {
         return false;
     }
     
-    a.iter().map(|n| n*n).all(|x| b.contains(&x))
+    // Both are the same length so both must be empty, shortcut rest of the logic
+    if a.is_empty() {
+        return true;
+    }
+
+    let mut actual_squares: Vec<_> = a.iter().map(|x| x*x).collect();
+    actual_squares.sort();
+    
+    let mut expected_squares = b;
+    expected_squares.sort();
+
+    actual_squares == expected_squares
 }
 
 #[test]
-fn empty_returns_false() {
+fn different_lengths_returns_false() {
     let a1 = vec![];
     let a2 = vec![1, 2, 3, 4];
     assert_eq!(comp(a1, a2), false);
@@ -19,10 +31,13 @@ fn empty_returns_false() {
     let a1 = vec![1, 2, 3, 4];
     let a2 = vec![];
     assert_eq!(comp(a1, a2), false);
+}
 
+#[test]
+fn both_empty_returns_true() {
     let a1 = vec![];
     let a2 = vec![];
-    assert_eq!(comp(a1, a2), false);
+    assert_eq!(comp(a1, a2), true);
 }
 
 #[test]
@@ -51,8 +66,13 @@ fn basic_fail() {
 
 #[test]
 fn massive_number_success() {
-    let a1 :Vec<i64>= [3032000498, 1032070398, 303200].to_vec();
-    let a2 :Vec<i64>= [3032000498 * 3032000498, 1032070398 * 1032070398, 303200 * 303200].to_vec();
+    let a1: Vec<i64> = [3032000498, 1032070398, 303200].to_vec();
+    let a2: Vec<i64> = [
+        3032000498 * 3032000498,
+        1032070398 * 1032070398,
+        303200 * 303200,
+    ]
+    .to_vec();
 
     assert_eq!(comp(a1, a2), true);
 }
@@ -83,5 +103,13 @@ fn codewars_tests() {
         144 * 144,
         19 * 19,
     ];
+    assert_eq!(comp(a1, a2), false);
+
+    let a1 = vec![121, 144, 19, 161, 19, 144, 19, 11];
+    let a2 = vec![121, 14641, 20736, 36100, 25921, 361, 20736, 361];
+    assert_eq!(comp(a1, a2), false);
+
+    let a1 = vec![2, 2, 3];
+    let a2 = vec![4, 9, 9];
     assert_eq!(comp(a1, a2), false);
 }
