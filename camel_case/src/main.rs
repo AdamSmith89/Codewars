@@ -5,16 +5,24 @@ fn main() {
 #[allow(dead_code)]
 fn camel_case(str: &str) -> String {
     let iter = str.split_whitespace();
+    let mut capitalised_words: Vec<String> = Vec::new();
 
-    for word in iter {
-        println!("{}", word);
-        
+    for word in iter {        
         let mut chars: Vec<char> = word.chars().collect();
-        chars[0] = chars[0].to_uppercase().;
+        chars[0] = chars[0].to_uppercase().nth(0).unwrap();
+
+        capitalised_words.push(chars.into_iter().collect());
     }
 
-    str.to_string()
+    capitalised_words.join("")
 }
+
+// Best-practice / clever from Codewars
+// fn camel_case(str: &str) -> String {
+//     str.split_whitespace()
+//         .map(|s| [&s[..1].to_uppercase(), &s[1..]].join(""))
+//         .collect()
+// }
 
 #[test]
 fn codewars_tests() {
