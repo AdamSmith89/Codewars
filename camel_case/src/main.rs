@@ -1,5 +1,8 @@
 fn main() {
     println!("Run Tests!");
+
+    //use cargo::ops::new;
+    cargo::ops::new()
 }
 
 #[allow(dead_code)]
